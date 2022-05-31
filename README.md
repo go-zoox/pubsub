@@ -24,7 +24,7 @@ import (
 func main(t *testing.T) {
 	e := pubsub.New()
 	count := 0
-	e.On("send.notify", pubsub.HandleFunc(func(payload any) {
+	e.Subscribe("send.notify", pubsub.HandleFunc(func(payload any) {
 		count++
 		t.Log("send.notify", payload)
 	}))
@@ -36,7 +36,7 @@ func main(t *testing.T) {
 		index := i
 		wg.Add(1)
 		go func() {
-			e.Emit("send.notify", index)
+			e.Publish("send.notify", index)
 			wg.Done()
 		}()
 	}
