@@ -15,33 +15,48 @@ go get github.com/go-zoox/pubsub
 
 ## Getting Started
 
+
+### Subscribe
 ```go
 import (
-  "testing"
   "github.com/go-zoox/pubsub"
 )
 
 func main(t *testing.T) {
-	e := pubsub.New()
-	count := 0
-	e.Subscribe("send.notify", pubsub.HandleFunc(func(payload any) {
-		count++
-		t.Log("send.notify", payload)
-	}))
+	ps := pubsub.New(&pubsub.Config{
+		RedisHost:     <RedisHost>,
+		RedisPort:     <RedisPort>,
+		RedisUsername: <RedisUsername>,
+		RedisPassword: <RedisPassword>,
+		RedisDB:       <RedisDB>,
+	})
 
-	e.Start()
+	ps.Subscribe(context.TODO(), "default", func(msg *pubsub.Message) error {
+				logger.Infof("received message: %s", string(msg.Body))
+				return nil
+			})
+}
+```
 
-	wg := &sync.WaitGroup{}
-	for i := 0; i < 10; i++ {
-		index := i
-		wg.Add(1)
-		go func() {
-			e.Publish("send.notify", index)
-			wg.Done()
-		}()
-	}
+### Publish
+```go
+import (
+  "github.com/go-zoox/pubsub"
+)
 
-	wg.Wait()
+func main(t *testing.T) {
+	ps := pubsub.New(&pubsub.Config{
+		RedisHost:     <RedisHost>,
+		RedisPort:     <RedisPort>,
+		RedisUsername: <RedisUsername>,
+		RedisPassword: <RedisPassword>,
+		RedisDB:       <RedisDB>,
+	})
+
+	ps.Publish(context.TODO(), &pubsub.Message{
+				Topic: "default",
+				Body:  []byte("hello world"),
+			})
 }
 ```
 
