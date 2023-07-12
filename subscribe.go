@@ -2,6 +2,7 @@ package pubsub
 
 import "context"
 
+// Subcribe subscribes to a topic.
 func (p *pubsub) Subscribe(ctx context.Context, topic string, handler Handler) error {
 	channel := p.client.Subscribe(ctx, topic).Channel()
 	for msg := range channel {

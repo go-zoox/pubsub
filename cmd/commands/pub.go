@@ -7,6 +7,7 @@ import (
 	"github.com/go-zoox/pubsub"
 )
 
+// Pub is the command for publishing a message to a topic.
 func Pub(app *cli.MultipleProgram) {
 	app.Register("pub", &cli.Command{
 		Name:  "pub",

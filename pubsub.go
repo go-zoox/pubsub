@@ -13,17 +13,20 @@ type PubSub interface {
 	Subscribe(ctx context.Context, topic string, handler Handler) error
 }
 
+// Message is a pubsub message.
 type Message struct {
 	Topic string
 	Body  []byte
 }
 
+// Handler is a pubsub handler.
 type Handler func(msg *Message) error
 
 type pubsub struct {
 	client *redis.Client
 }
 
+// Config is the config for a pubsub.
 type Config struct {
 	RedisHost     string
 	RedisPort     int
@@ -32,6 +35,7 @@ type Config struct {
 	RedisDB       int
 }
 
+// New creates a new pubsub.
 func New(cfg *Config) PubSub {
 	return &pubsub{
 		client: redis.NewClient(&redis.Options{

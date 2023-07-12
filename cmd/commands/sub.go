@@ -8,6 +8,7 @@ import (
 	"github.com/go-zoox/pubsub"
 )
 
+// Sub is the command for subscribing to a topic.
 func Sub(app *cli.MultipleProgram) {
 	app.Register("sub", &cli.Command{
 		Name:  "sub",
