@@ -48,7 +48,13 @@ func (p *pubsub) Publish(ctx context.Context, msg *Message) error {
 }
 
 func (p *pubsub) Subscribe(ctx context.Context, topic string, handler Handler) error {
-	channel := p.client.Subscribe(ctx, topic).Channel()
+	subscribe := p.client.Subscribe(ctx, topic)
+	go func() {
+		<-ctx.Done()
+		subscribe.Close()
+	}()
+
+	channel := subscribe.Channel()
 	for msg := range channel {
 		if err := handler(&Message{
 			Topic: topic,
